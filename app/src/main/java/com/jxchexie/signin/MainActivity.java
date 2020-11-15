@@ -126,9 +126,11 @@ public class MainActivity extends AppCompatActivity {
         btn_StartAm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
                 if(!checkLabMac()){
                     return;
                 }
+                */
                 SignIn(Constant.AM_SIGNIN);
             }
         });
@@ -136,9 +138,7 @@ public class MainActivity extends AppCompatActivity {
         btn_EndAm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!checkLabMac()){
-                    return;
-                }
+
                 SignIn(Constant.AM_SIGNOUT);
             }
         });
@@ -146,36 +146,28 @@ public class MainActivity extends AppCompatActivity {
         btn_StartPm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!checkLabMac()){
-                    return;
-                }
+
                 SignIn(Constant.PM_SIGNIN);
             }
         });
         btn_EndPm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!checkLabMac()){
-                    return;
-                }
+
                 SignIn(Constant.PM_SIGNOUT);
             }
         });
         btn_StartN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!checkLabMac()){
-                    return;
-                }
+
                 SignIn(Constant.NIGHT_SIGNIN);
             }
         });
         btn_EndN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!checkLabMac()){
-                    return;
-                }
+
                 SignIn(Constant.NIGHT_SIGNOUT);
             }
         });
@@ -206,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
     /*比对路由器的MAC地址*/
+    /*
     public boolean checkLabMac(){
         //获取WiFIMac地址
         if(NetworkUtils.isWifiConnected(MainActivity.this)){
@@ -223,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     }
+    */
     public void SignIn(String type){
         showWaitDialog();
         /*获取当前时间*/
