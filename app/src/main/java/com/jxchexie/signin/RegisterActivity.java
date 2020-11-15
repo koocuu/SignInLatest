@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -12,6 +13,7 @@ import com.blankj.utilcode.utils.StringUtils;
 import com.gc.materialdesign.views.ButtonRectangle;
 import com.jxchexie.api.Api;
 import com.jxchexie.bean.ResponseLogin;
+import com.jxchexie.utils.Code;
 import com.jxchexie.utils.Constant;
 import com.jxchexie.utils.JsonUtils;
 import com.lzy.okgo.OkGo;
@@ -27,11 +29,14 @@ import okhttp3.Response;
 
 public class RegisterActivity extends AppCompatActivity {
 
-
+    private String realCode;
     private ButtonRectangle btn_register;
     private MaterialEditText username_register;
     private MaterialEditText password_register;
+    private MaterialEditText code_register;
+    private ImageView varify_Code;
     private String str_username;
+    private String str_Code;
     private String str_password;
     private MaterialDialog md;
     private ResponseLogin login;
@@ -41,6 +46,9 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         initView();
+        //将验证码用图片形式显示
+        varify_Code.setImageBitmap(Code.getInstance().createBitmap());
+        realCode = Code.getInstance().getCode().toLowerCase();
         initEvent();
     }
 
@@ -48,6 +56,8 @@ public class RegisterActivity extends AppCompatActivity {
         btn_register=(ButtonRectangle)findViewById(R.id.btn_register);
         username_register=(MaterialEditText)findViewById(R.id.username_register);
         password_register=(MaterialEditText)findViewById(R.id.password_register);
+        varify_Code = (ImageView)findViewById(R.id.mCode);
+        code_register = (MaterialEditText)findViewById(R.id.input_code);
     }
     private void initEvent(){
         btn_register.setOnClickListener(new View.OnClickListener() {
@@ -56,7 +66,13 @@ public class RegisterActivity extends AppCompatActivity {
                 checkUser();
             }
         });
-
+        varify_Code.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                varify_Code.setImageBitmap(Code.getInstance().createBitmap());
+                realCode = Code.getInstance().getCode().toLowerCase();
+            }
+        });
     }
     /*用户名密码校验*/
     public void checkUser(){
@@ -67,12 +83,17 @@ public class RegisterActivity extends AppCompatActivity {
         }
         str_username=username_register.getText().toString();
         str_password=password_register.getText().toString();
+        str_Code = code_register.getText().toString().toLowerCase();
         if(StringUtils.isSpace(str_username)){
             Toast.makeText(RegisterActivity.this,"用户名不能为空",Toast.LENGTH_SHORT).show();
             return;
         }
         if(StringUtils.isSpace(str_password)){
             Toast.makeText(RegisterActivity.this,"密码不能为空",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(StringUtils.isSpace(str_Code)){
+            Toast.makeText(RegisterActivity.this,"验证码不能为空",Toast.LENGTH_SHORT).show();
             return;
         }
         /*显示提示正在登录对话框*/
@@ -99,7 +120,14 @@ public class RegisterActivity extends AppCompatActivity {
                         login= JsonUtils.fromJson(s,ResponseLogin.class);
                         md.dismiss();
                         if(login.getStatus().equals(Constant.SUCCESS)){
-                            RegisterActivity.this.finish();
+                            if (str_Code.equals(realCode)) {
+                                RegisterActivity.this.finish();
+                                Toast.makeText(RegisterActivity.this, "验证码正确,注册成功", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(RegisterActivity.this, "验证码错误,注册失败", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
                             Toast.makeText(RegisterActivity.this,"注册成功，请登录",Toast.LENGTH_SHORT).show();
                         }else{
                             if(login.getMsg().equals(Constant.ERROR_SYSTEM)){

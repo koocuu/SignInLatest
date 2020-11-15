@@ -5,7 +5,7 @@ package com.jxchexie.api;
  */
 public class Api {
     /*配置baseUl*/
-    public static final String BASE_URL="http://b1w93.free.natapp.cc/phone_api/";
+    public static final String BASE_URL="http://www.zjcoming.website:3000/phone_api/";
     /*用户登录*/
     public static final String LOGIN=BASE_URL + "login";
     /*用户注册*/
